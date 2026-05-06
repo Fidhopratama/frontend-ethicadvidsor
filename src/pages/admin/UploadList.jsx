@@ -2,50 +2,66 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
 import Table from "../../components/Table";
-import { getUploads } from "../../services/uploadService";
+import { getUploads } from "../../services/adminService";
 
 export default function UploadList() {
   const [uploads, setUploads] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     fetchUploads();
   }, []);
 
+  // =========================
+  // 🔥 FETCH UPLOADS FIXED
+  // =========================
   const fetchUploads = async () => {
     try {
       const res = await getUploads();
 
-      // rapihin data
-      const formatted = res.map((item) => ({
-        ID: item.id,
-        User: item.user?.name || "-",
-        File: item.file_name,
-        Type: item.type,
-      }));
+      // 🔥 HANDLE BERBAGAI SHAPE RESPONSE
+      const data = res?.data || res || [];
 
-      setUploads(formatted);
+      setUploads(
+        data.map((u) => ({
+          User: u.user?.name || "-",
+          File: u.file_name || "-",
+          Type: u.type || "-",
+        }))
+      );
     } catch (err) {
-      console.log(err);
+      console.error("Gagal ambil upload:", err);
     }
   };
 
   return (
-    <div className="flex bg-gray-100 min-h-screen">
-      <Sidebar role="admin" />
+    <div className="flex min-h-screen bg-gray-100">
+
+      {/* SIDEBAR */}
+      <Sidebar role={user?.role} />
 
       <div className="flex-1">
+
+        {/* NAVBAR */}
         <Navbar user={user} />
 
         <div className="p-6">
-          <h1 className="text-xl font-bold mb-4">
-            📁 Upload Management
+
+          <h1 className="text-2xl font-bold mb-6">
+            Total Uploads 
           </h1>
 
-          <Table
-            columns={["ID", "User", "File", "Type"]}
-            data={uploads}
-          />
+          <div className="bg-white p-5 rounded-xl shadow">
+
+            {/* TABLE */}
+            <Table
+              columns={["User", "File", "Type"]}
+              data={uploads}
+            />
+
+          </div>
+
         </div>
       </div>
     </div>

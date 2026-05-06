@@ -13,6 +13,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 
 export default function Upload() {
@@ -22,57 +23,43 @@ export default function Upload() {
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
 
-  // =========================
-  // FORMAT RUPIAH
-  // =========================
   const formatRupiah = (num) =>
     new Intl.NumberFormat("id-ID").format(num || 0);
 
-  // =========================
-  // UPLOAD
-  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!file) return alert("Pilih file dulu!");
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", type);
+    if (!type) return alert("Pilih type dulu!");
 
     try {
       setLoading(true);
 
-      const res = await uploadFile(formData);
+      const res = await uploadFile(file, type);
 
       setReport(res.report || null);
       setFileName(file.name);
     } catch (err) {
-      console.error(err);
+      console.error("UPLOAD ERROR:", err.response?.data || err.message);
       alert("Upload gagal");
     } finally {
       setLoading(false);
     }
   };
 
-  // =========================
-  // PDF EXPORT
-  // =========================
   const downloadPDF = async () => {
     const element = document.getElementById("report");
-
-    const canvas = await html2canvas(element);
+    const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF("p", "mm", "a4");
-    pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
+    const pdfWidth = 190;
+    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
+    pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, imgHeight);
     pdf.save("report.pdf");
   };
 
-  // =========================
-  // CHART DATA SAFE
-  // =========================
   const chartData =
     report?.chart?.labels?.length > 0
       ? report.chart.labels.map((label, i) => ({
@@ -81,170 +68,263 @@ export default function Upload() {
         }))
       : [];
 
-  // =========================
-  // STATUS COLOR
-  // =========================
-  const statusColor =
+  const statusConfig =
     report?.status === "green"
-      ? "bg-green-500"
+      ? {
+          bg: "bg-green-100",
+          text: "text-green-700",
+          badge: "Excellent",
+        }
       : report?.status === "yellow"
-      ? "bg-yellow-500"
-      : "bg-red-500";
+      ? {
+          bg: "bg-yellow-100",
+          text: "text-yellow-700",
+          badge: "Moderate",
+        }
+      : {
+          bg: "bg-red-100",
+          text: "text-red-700",
+          badge: "Risk",
+        };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+    <div className="flex min-h-screen bg-[#f8fafc]">
+      <Sidebar role="user" />
 
       <div className="flex-1">
         <Navbar />
 
-        <div className="p-6 max-w-6xl mx-auto">
-
-          {/* TITLE */}
-          <h1 className="text-3xl font-bold mb-6">
-            Financial & ESG Analyzer
-          </h1>
-
-          {/* =========================
-              UPLOAD CARD
-          ========================= */}
-          <div className="bg-white p-6 rounded-xl shadow mb-8 max-w-md">
-            <form onSubmit={handleSubmit} className="space-y-4">
-
-              <select
-                className="w-full border p-2 rounded"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <option value="finance">Finance</option>
-                <option value="esg">ESG</option>
-              </select>
-
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-              />
-
-              <button
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-              >
-                {loading ? "Processing..." : "Upload & Analyze"}
-              </button>
-            </form>
+        <div className="p-6 max-w-7xl mx-auto space-y-8">
+          {/* HEADER */}
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Financial & ESG Analyzer
+            </h1>
+            <p className="text-gray-500 mt-1">
+              Upload laporan finance atau ESG untuk analisis otomatis dan export
+              report siap audit.
+            </p>
           </div>
 
-          {/* =========================
-              REPORT SECTION
-          ========================= */}
-          {fileName && (
-            <div className="space-y-6">
+          {/* TOP GRID */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* UPLOAD CARD */}
+            <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-lg font-semibold mb-1">Upload Document</h2>
+              <p className="text-sm text-gray-500 mb-5">
+                Pilih file dan tipe analisis
+              </p>
 
-              <div
-                id="report"
-                className="bg-white p-8 rounded-2xl shadow-lg border"
-              >
-
-                {/* HEADER */}
-                <div className="border-b pb-4 mb-6">
-                  <h2 className="text-2xl font-bold">Official Report</h2>
-                  <p className="text-sm text-gray-500">
-                    File: {fileName}
-                  </p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 block mb-2">
+                    Report Type
+                  </label>
+                  <select
+                    className="w-full border border-gray-300 p-3 rounded-xl bg-white"
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                  >
+                    <option value="finance">Finance</option>
+                    <option value="esg">ESG</option>
+                  </select>
                 </div>
 
-                {/* NO REPORT */}
-                {!report && (
-                  <p className="text-gray-500">
-                    File uploaded (no analysis result)
-                  </p>
-                )}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 block mb-2">
+                    Upload File
+                  </label>
+                  <input
+                    type="file"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    className="w-full border border-dashed border-gray-300 p-3 rounded-xl bg-gray-50"
+                  />
+                </div>
 
-                {/* REPORT CONTENT */}
-                {report && (
-                  <>
-                    {/* STATUS */}
-                    <div className={`${statusColor} text-white px-4 py-2 rounded mb-6`}>
-                      ESG Score: {report.esg_score}
+                <button
+                  disabled={loading}
+                  className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition font-medium"
+                >
+                  {loading ? "Processing..." : "Upload & Analyze"}
+                </button>
+              </form>
+            </div>
+
+            {/* INFO CARD */}
+            <div className="lg:col-span-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg p-6 text-white">
+              <h2 className="text-2xl font-bold mb-2">
+                Report Analysis
+              </h2>
+              <p className="text-blue-100 max-w-2xl mb-6">
+                Analisis otomatis laporan keuangan dan ESG untuk mengetahui
+                performa bisnis, compliance, serta sustainability score secara
+                cepat dan terstruktur.
+              </p>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  ["Auto Scan", "Instant"],
+                  ["ESG Rating", "Smart"],
+                  ["Audit Ready", "PDF"],
+                  ["Charts", "Visual"],
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="bg-white/10 backdrop-blur-sm rounded-2xl p-4"
+                  >
+                    <p className="text-sm text-blue-100">{item[0]}</p>
+                    <h3 className="text-xl font-bold">{item[1]}</h3>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* REPORT */}
+          {fileName && (
+            <div className="space-y-6">
+              <div
+                id="report"
+                className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden"
+              >
+                {/* REPORT HEADER */}
+                <div className="px-8 py-6 border-b bg-gray-50">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800">
+                        Official Report
+                      </h2>
+                      <p className="text-sm text-gray-500">File: {fileName}</p>
                     </div>
 
-                    {/* SUMMARY */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="bg-gray-50 p-4 rounded-xl">
-                        <p>Revenue</p>
-                        <h3 className="text-green-600 font-bold">
+                    {report && (
+                      <span
+                        className={`px-4 py-2 rounded-full text-sm font-medium ${statusConfig.bg} ${statusConfig.text}`}
+                      >
+                        {statusConfig.badge}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {!report && (
+                  <div className="p-8 text-gray-500">
+                    File uploaded successfully (no analysis result)
+                  </div>
+                )}
+
+                {report && (
+                  <div className="p-8 space-y-8">
+                    {/* SCORE CARDS */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-gray-50 p-5 rounded-2xl">
+                        <p className="text-sm text-gray-500">ESG Score</p>
+                        <h3 className="text-3xl font-bold text-green-600">
+                          {report.esg_score}
+                        </h3>
+                      </div>
+
+                      <div className="bg-gray-50 p-5 rounded-2xl">
+                        <p className="text-sm text-gray-500">Revenue</p>
+                        <h3 className="text-2xl font-bold text-blue-600">
                           Rp {formatRupiah(report.revenue)}
                         </h3>
                       </div>
 
-                      <div className="bg-gray-50 p-4 rounded-xl">
-                        <p>Profit</p>
-                        <h3 className="text-blue-600 font-bold">
+                      <div className="bg-gray-50 p-5 rounded-2xl">
+                        <p className="text-sm text-gray-500">Profit</p>
+                        <h3 className="text-2xl font-bold text-emerald-600">
                           Rp {formatRupiah(report.profit)}
                         </h3>
                       </div>
                     </div>
 
                     {/* RATIOS */}
-                    <div className="space-y-4 mb-6">
-
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <p>Profit Margin</p>
-                        <div className="w-full bg-gray-200 h-3 rounded">
+                        <div className="flex justify-between mb-2 text-sm">
+                          <span>Profit Margin</span>
+                          <span>{report.profit_margin}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 h-3 rounded-full">
                           <div
-                            className="bg-green-500 h-3 rounded"
+                            className="bg-green-500 h-3 rounded-full"
                             style={{ width: `${report.profit_margin}%` }}
                           />
                         </div>
-                        <span>{report.profit_margin}%</span>
                       </div>
 
                       <div>
-                        <p>Debt Ratio</p>
-                        <div className="w-full bg-gray-200 h-3 rounded">
+                        <div className="flex justify-between mb-2 text-sm">
+                          <span>Debt Ratio</span>
+                          <span>{report.debt_ratio}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 h-3 rounded-full">
                           <div
-                            className="bg-red-500 h-3 rounded"
+                            className="bg-red-500 h-3 rounded-full"
                             style={{ width: `${report.debt_ratio}%` }}
                           />
                         </div>
-                        <span>{report.debt_ratio}%</span>
                       </div>
                     </div>
 
-                    {/* =========================
-                        CHART FIX
-                    ========================= */}
-                    <div className="w-full h-[300px] mb-6">
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={chartData}>
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip />
-                          <Bar dataKey="value" />
-                        </BarChart>
-                      </ResponsiveContainer>
+                    {/* CHART */}
+                    <div className="bg-gray-50 rounded-2xl p-5">
+                      <h3 className="font-semibold mb-4">Performance Chart</h3>
+                      <div className="w-full h-[320px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="value" radius={[8, 8, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
 
-                    {/* ESG DETAIL */}
-                    <div className="mb-6">
-                      <h3 className="font-bold mb-2">ESG Breakdown</h3>
-                      <p>Environment: {report.esg_detail.environment}</p>
-                      <p>Social: {report.esg_detail.social}</p>
-                      <p>Governance: {report.esg_detail.governance}</p>
+                    {/* ESG BREAKDOWN */}
+                    <div className="bg-gray-50 rounded-2xl p-5">
+                      <h3 className="font-semibold mb-4">ESG Breakdown</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-4 bg-white rounded-xl border">
+                          <p className="text-sm text-gray-500">Environment</p>
+                          <h4 className="text-xl font-bold text-green-600">
+                            {report.esg_detail.environment}
+                          </h4>
+                        </div>
+
+                        <div className="p-4 bg-white rounded-xl border">
+                          <p className="text-sm text-gray-500">Social</p>
+                          <h4 className="text-xl font-bold text-blue-600">
+                            {report.esg_detail.social}
+                          </h4>
+                        </div>
+
+                        <div className="p-4 bg-white rounded-xl border">
+                          <p className="text-sm text-gray-500">Governance</p>
+                          <h4 className="text-xl font-bold text-purple-600">
+                            {report.esg_detail.governance}
+                          </h4>
+                        </div>
+                      </div>
                     </div>
 
                     {/* INSIGHT */}
-                    <div className="bg-yellow-50 p-4 rounded-xl">
-                      📌 {report.insight}
+                    <div className="bg-yellow-50 border border-yellow-200 p-5 rounded-2xl">
+                      <h3 className="font-semibold mb-2 text-yellow-800">
+                       Insight
+                      </h3>
+                      <p className="text-yellow-700">{report.insight}</p>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
 
-              {/* DOWNLOAD */}
               <button
                 onClick={downloadPDF}
-                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+                className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition font-medium"
               >
                 Download PDF
               </button>
