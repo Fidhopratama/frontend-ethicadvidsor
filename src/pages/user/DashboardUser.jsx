@@ -81,10 +81,8 @@ export default function DashboardUser() {
                   Welcome back, {user?.name || "User"} 
                 </h2>
                 <p className="text-sm text-green-50">
-                 EthicAdvisor adalah platform monitoring ESG (Environmental, Social, and Governance) yang menyediakan analisis laporan keuangan, 
-                 pemantauan kepatuhan terhadap regulasi OJK dan Bank Indonesia, serta pembuatan laporan otomatis dalam satu dashboard terintegrasi. 
-                 Platform ini membantu organisasi meningkatkan transparansi, efisiensi, dan kualitas pengambilan keputusan berbasis data.
-
+                  Kelola laporan ESG dan Financial anda dengan lebih cepat,
+                  terstruktur, dan siap audit.
                 </p>
               </div>
 

@@ -36,19 +36,19 @@ export default function Landing() {
   const faqItems = [
     {
       q: "Apa fungsi utama EthicAdvisor?",
-      a: "EthicAdvisor membantu monitoring ESG, analisis laporan keuangan, compliance OJK/BI, dan generate report otomatis dalam satu dashboard.",
+      a: "EthicAdvisor adalah platform monitoring ESG (Environmental, Social, and Governance) yang menyediakan analisis laporan keuangan, pemantauan kepatuhan terhadap regulasi OJK dan Bank Indonesia, serta pembuatan laporan otomatis dalam satu dashboard terintegrasi. Platform ini membantu organisasi meningkatkan transparansi, efisiensi, dan kualitas pengambilan keputusan berbasis data."
     },
     {
       q: "Apakah sistem ini mendukung ESG reporting?",
-      a: "Ya. Sistem mendukung monitoring ESG score, compliance status, dan sustainability metrics secara real-time.",
+      a: "Ya. EthicAdvisor mendukung proses ESG reporting secara menyeluruh, mulai dari monitoring ESG score, pelacakan sustainability metrics, hingga pemantauan status compliance terhadap standar dan regulasi yang berlaku. Sistem menyediakan dashboard real-time yang memungkinkan pengguna memantau performa lingkungan, sosial, dan tata kelola perusahaan secara terpusat. Selain itu, pengguna dapat mengunggah data atau laporan ESG untuk dianalisis secara otomatis, menghasilkan insight yang lebih akurat, serta mengekspor laporan profesional yang siap digunakan untuk kebutuhan audit, regulator, investor, maupun pelaporan internal perusahaan."
+    }, 
+    {
+  q: "Apakah laporan bisa digunakan untuk audit?",
+  a: "Ya. EthicAdvisor menghasilkan laporan yang terstruktur, terdokumentasi dengan baik, dan siap digunakan untuk kebutuhan audit maupun pelaporan compliance. Setiap laporan menyajikan data keuangan, metrik ESG, hasil analisis, serta status kepatuhan dalam format yang mudah dipahami dan ditinjau oleh auditor, regulator, maupun stakeholder perusahaan. Fitur ekspor laporan juga memungkinkan pengguna menghasilkan dokumen profesional yang mendukung proses audit, meningkatkan transparansi, serta mempercepat penyusunan laporan perusahaan secara keseluruhan."
     },
     {
-      q: "Apakah laporan bisa digunakan untuk audit?",
-      a: "Bisa. Output sistem dirancang agar siap audit, mudah ditinjau, dan membantu proses pelaporan compliance.",
-    },
-    {
-      q: "Siapa yang cocok menggunakan sistem ini?",
-      a: "Cocok untuk FinTech, startup digital, analis keuangan, auditor internal, dan tim compliance.",
+  q: "Siapa yang cocok menggunakan sistem ini?",
+  a: "EthicAdvisor cocok digunakan oleh berbagai jenis organisasi dan profesional yang membutuhkan pengelolaan ESG, analisis keuangan, serta pemantauan kepatuhan secara terintegrasi. Platform ini ideal untuk perusahaan FinTech, startup digital, institusi keuangan, perusahaan skala menengah hingga besar, analis keuangan, auditor internal, tim compliance, serta manajemen perusahaan yang membutuhkan insight berbasis data untuk pengambilan keputusan. Dengan fitur monitoring real-time, analisis otomatis, dan pelaporan profesional, EthicAdvisor membantu pengguna meningkatkan efisiensi operasional, transparansi, serta kualitas tata kelola perusahaan."
     },
   ];
 
@@ -203,9 +203,10 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">About EthicAdvisor</h2>
           <p className="max-w-3xl mx-auto text-gray-500 text-lg leading-relaxed">
-            EthicAdvisor adalah platform ESG dan financial system modern
-            untuk membantu perusahaan memantau sustainability performance,
-            compliance, dan reporting secara real-time dalam satu sistem.
+            EthicAdvisor adalah platform ESG dan financial intelligence yang membantu perusahaan memantau kinerja keberlanjutan, menganalisis laporan keuangan, serta memastikan kepatuhan terhadap regulasi dalam satu dashboard terintegrasi.
+
+Dengan analisis otomatis, monitoring real-time, dan fitur pelaporan profesional, EthicAdvisor mempermudah pengambilan keputusan berbasis data sekaligus meningkatkan transparansi, efisiensi, dan akuntabilitas bisnis.
+
           </p>
         </div>
       </section>
