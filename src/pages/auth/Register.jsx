@@ -68,7 +68,7 @@ export default function Register() {
               Create Account
             </h2>
             <p className="text-sm text-gray-500 text-center mb-6">
-              Daftar untuk mulai menggunakan sistem
+              Sign up to start using the system
             </p>
 
             <input
@@ -106,7 +106,7 @@ export default function Register() {
           {/* FOOTER */}
           <div className="mt-4 text-center space-y-2">
             <p className="text-sm text-gray-600">
-              Sudah punya akun?{" "}
+              Already have an account?{" "}
               <span
                 className="text-blue-600 cursor-pointer hover:underline font-medium"
                 onClick={() => navigate("/login")}
@@ -119,7 +119,7 @@ export default function Register() {
               onClick={() => navigate("/")}
               className="text-sm text-gray-500 cursor-pointer hover:text-gray-700"
             >
-              ← Kembali ke Home
+              ← Back to Home
             </p>
           </div>
         </div>

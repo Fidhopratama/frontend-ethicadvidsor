@@ -69,7 +69,7 @@ export default function Login() {
               Welcome Back
             </h2>
             <p className="text-sm text-gray-500 text-center mb-6">
-              Login untuk melanjutkan ke dashboard
+              Sign in to proceed to the dashboard.
             </p>
 
             <input
@@ -98,7 +98,7 @@ export default function Login() {
 
           <div className="mt-4 text-center space-y-2">
             <p className="text-sm text-gray-600">
-              Belum punya akun?{" "}
+              Don't have an account?{" "}
               <span
                 className="text-blue-600 cursor-pointer hover:underline font-medium"
                 onClick={() => navigate("/register")}
@@ -111,7 +111,7 @@ export default function Login() {
               onClick={() => navigate("/")}
               className="text-sm text-gray-500 cursor-pointer hover:text-gray-700"
             >
-              ← Kembali ke Home
+              ← Back to Home
             </p>
           </div>
         </div>
