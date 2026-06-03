@@ -137,7 +137,7 @@ export default function DashboardUser() {
                   <UploadCloud className="w-8 h-8 text-green-600 mb-3" />
                   <h3 className="font-semibold text-gray-800">Upload Report</h3>
                   <p className="text-sm text-gray-500">
-                    Tambah file baru untuk dianalisis
+                    Add a new file for analysis
                   </p>
                 </button>
 
@@ -145,7 +145,7 @@ export default function DashboardUser() {
                   <BarChart3 className="w-8 h-8 text-blue-600 mb-3" />
                   <h3 className="font-semibold text-gray-800">View Analytics</h3>
                   <p className="text-sm text-gray-500">
-                    Lihat hasil ESG & financial metrics
+                    View ESG & financial metrics
                   </p>
                 </button>
 
@@ -153,7 +153,7 @@ export default function DashboardUser() {
                   <FileSearch className="w-8 h-8 text-purple-600 mb-3" />
                   <h3 className="font-semibold text-gray-800">Generate Report</h3>
                   <p className="text-sm text-gray-500">
-                    Export laporan siap audit
+                    Export report ready for audit
                   </p>
                 </button>
               </div>
@@ -161,7 +161,7 @@ export default function DashboardUser() {
               {/* EMPTY STATE */}
               {total === 0 && (
                 <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-xl">
-                   Belum ada data upload. Silakan upload laporan terlebih dahulu.
+                   There is no uploaded data yet. Please upload a report first.
                 </div>
               )}
 

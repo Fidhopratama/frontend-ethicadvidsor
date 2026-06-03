@@ -82,7 +82,7 @@ export default function UploadList() {
               </h1>
 
               <p className="text-slate-500 mt-1">
-                Kelola seluruh file upload user
+                Manage all user uploaded files
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function UploadList() {
                         colSpan="4"
                         className="text-center py-10 text-slate-500"
                       >
-                        Belum ada upload file
+                        There are no uploaded files yet.
                       </td>
                     </tr>
                   )}

@@ -72,11 +72,11 @@ export default function Users() {
           {/* HEADER */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-800">
-              Kelola User
+              Manage User
             </h1>
 
             <p className="text-slate-500 mt-1">
-              Daftar seluruh pengguna EthicAdvisor
+              List of all EthicAdvisor users
             </p>
           </div>
 
@@ -156,7 +156,7 @@ export default function Users() {
 
               {users.length === 0 && (
                 <div className="p-10 text-center text-slate-500">
-                  Tidak ada user ditemukan.
+                  There are no users yet.
                 </div>
               )}
             </div>

@@ -126,7 +126,7 @@ export default function AppRoutes() {
               </h1>
 
               <p className="text-slate-600">
-                Halaman tidak ditemukan
+                Page not found
               </p>
             </div>
           </div>
